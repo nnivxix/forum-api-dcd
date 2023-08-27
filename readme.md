@@ -1,1 +1,1 @@
-# Forum API (Garuda Game)
+# Forum API (Dicoding Back-end Expert Submission)
