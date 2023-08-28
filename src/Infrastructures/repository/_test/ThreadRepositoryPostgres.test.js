@@ -7,6 +7,7 @@ const NewThread = require("../../../Domains/threads/entities/NewThread");
 const AddedThread = require("../../../Domains/threads/entities/AddedThread");
 const ThreadRepositoryPostgres = require("../ThreadRepositoryPostgres");
 const UserRepositoryPostgres = require("../UserRepositoryPostgres");
+const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 
 describe("ThreadRepositoryPostgres", () => {
   afterEach(async () => {
@@ -83,6 +84,35 @@ describe("ThreadRepositoryPostgres", () => {
           owner: "user-123",
         })
       );
+    });
+  });
+  describe("getThreadById function", () => {
+    it("should throw NotFoundError when thread not found", () => {
+      // Arrange
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action & Assert
+      expect(
+        threadRepositoryPostgres.getThreadById("fakeId")
+      ).rejects.toThrowError(NotFoundError);
+    });
+
+    it("should return thread's information when thread found", async () => {
+      // Arrange
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+      await UsersTableTestHelper.addUser({
+        id: "user-123",
+        username: "dicoding",
+      });
+      await ThreadsTableTestHelper.addThread({
+        id: "thread-123",
+        owner: "user-123",
+      });
+
+      // Action
+      const result = await threadRepositoryPostgres.getThreadById("thread-123");
+      expect(result.title).toEqual("sebuah thread");
+      expect(result.body).toEqual("sebuah body thread");
     });
   });
 });

@@ -1,12 +1,4 @@
 class Thread {
-  /**
-   * @param {object} payload
-   * @param {string} payload.id
-   * @param {string} payload.title
-   * @param {string} payload.body
-   * @param {Date} payload.date
-   * @param {string} payload.username
-   */
   constructor(payload) {
     this._verifyPayload(payload);
 

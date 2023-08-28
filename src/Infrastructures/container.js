@@ -11,9 +11,11 @@ const pool = require("./database/postgres/pool");
 // service (repository, helper, manager, etc)
 const UserRepository = require("../Domains/users/UserRepository");
 const ThreadRepository = require("../Domains/threads/ThreadRepository");
+const CommentRepository = require("../Domains/comments/CommentRepository");
 
 const UserRepositoryPostgres = require("./repository/UserRepositoryPostgres");
 const ThreadRepositoryPostgres = require("./repository/ThreadRepositoryPostgres");
+const CommentRepositoryPostgres = require("./repository/CommentRepositoryPostgres");
 
 const PasswordHash = require("../Applications/security/PasswordHash");
 const BcryptPasswordHash = require("./security/BcryptPasswordHash");
@@ -21,6 +23,7 @@ const BcryptPasswordHash = require("./security/BcryptPasswordHash");
 // use case
 const AddUserUseCase = require("../Applications/use_case/AddUserUseCase");
 const AddThreadUseCase = require("../Applications/use_case/AddThreadUseCase");
+const AddCommentUseCase = require("../Applications/use_case/AddCommentUseCase");
 
 const AuthenticationTokenManager = require("../Applications/security/AuthenticationTokenManager");
 const JwtTokenManager = require("./security/JwtTokenManager");
@@ -85,6 +88,20 @@ container.register([
   {
     key: ThreadRepository.name,
     Class: ThreadRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: CommentRepository.name,
+    Class: CommentRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -181,6 +198,23 @@ container.register([
         {
           name: "threadRepository",
           internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        {
+          name: "threadRepository",
+          internal: ThreadRepository.name,
+        },
+        {
+          name: "commentRepository",
+          internal: CommentRepository.name,
         },
       ],
     },
