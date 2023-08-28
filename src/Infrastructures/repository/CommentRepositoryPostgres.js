@@ -36,7 +36,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async verifyCommentExist(id) {
     const query = {
-      text: "SELECT content FROM comments WHERE id=$1",
+      text: "SELECT * FROM comments WHERE id=$1",
       values: [id],
     };
     const result = await this._pool.query(query);
@@ -53,7 +53,6 @@ class CommentRepositoryPostgres extends CommentRepository {
       values: [threadId],
     };
     const { rows } = await this._pool.query(query);
-    console.log(rows);
     return rows;
   }
 }

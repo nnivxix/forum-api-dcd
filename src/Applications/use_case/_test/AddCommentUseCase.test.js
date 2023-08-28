@@ -5,44 +5,50 @@ const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const AddCommentUseCase = require("../AddCommentUseCase");
 
 describe("AddCommentUseCase", () => {
-  it("should orcherstrating the add comment action correctly", async () => {
+  it("should orchestrating the add comment correctly", async () => {
+    // Arrange
     const useCasePayload = {
-      content: "ini Content",
+      content: "Example Content",
     };
-    const expectedNewComment = new AddedComment({
+
+    const expectedAddedComment = new AddedComment({
       id: "comment-123",
       content: useCasePayload.content,
-      thread: "thread-123",
       owner: "user-123",
     });
-    const owner = "user-123";
+
+    const credentialId = "user-123";
     const threadId = "thread-123";
 
+    // creating dependency of use case
+    const mockCommentRepository = new CommentRepository();
     const mockThreadRepository = new ThreadRepository();
-    const mockCommentRepositoruy = new CommentRepository();
 
-    mockThreadRepository.verifyThreadExist = jest
+    // mock needed function
+    mockCommentRepository.addComment = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(expectedAddedComment));
+    mockThreadRepository.getThreadById = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
-    mockCommentRepositoruy.addComment = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(expectedNewComment));
 
-    const getCommentUseCase = new AddCommentUseCase({
+    // creating use case instance
+    const getAddedComment = new AddCommentUseCase({
+      commentRepository: mockCommentRepository,
       threadRepository: mockThreadRepository,
-      commentRepository: mockCommentRepositoruy,
     });
 
-    const addedComment = await getCommentUseCase.execute(
-      owner,
+    // Action
+    const addedComment = await getAddedComment.execute(
+      credentialId,
       threadId,
       useCasePayload
     );
 
-    expect(addedComment).toStrictEqual(expectedNewComment);
-    expect(mockThreadRepository.verifyThreadExist).toBeCalledWith(threadId);
-    expect(mockCommentRepositoruy.addComment).toBeCalledWith(
-      owner,
+    // Assert
+    expect(addedComment).toStrictEqual(expectedAddedComment);
+    expect(mockCommentRepository.addComment).toBeCalledWith(
+      credentialId,
       threadId,
       new NewComment({
         content: useCasePayload.content,
