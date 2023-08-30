@@ -23,6 +23,7 @@ const BcryptPasswordHash = require("./security/BcryptPasswordHash");
 // use case
 const AddUserUseCase = require("../Applications/use_case/AddUserUseCase");
 const AddThreadUseCase = require("../Applications/use_case/AddThreadUseCase");
+const GetThreadUseCase = require("../Applications/use_case/GetThreadUseCase");
 const AddCommentUseCase = require("../Applications/use_case/AddCommentUseCase");
 
 const AuthenticationTokenManager = require("../Applications/security/AuthenticationTokenManager");
@@ -198,6 +199,23 @@ container.register([
         {
           name: "threadRepository",
           internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: GetThreadUseCase.name,
+    Class: GetThreadUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        {
+          name: "threadRepository",
+          internal: ThreadRepository.name,
+        },
+        {
+          name: "commentRepository",
+          internal: CommentRepository.name,
         },
       ],
     },
