@@ -46,10 +46,8 @@ describe("GetThreadUseCase", () => {
     };
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
-    mockThreadRepository.verifyThreadExist = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(useCasePayload.thread));
-    mockThreadRepository.getDetailThread = jest
+
+    mockThreadRepository.getThreadById = jest
       .fn()
       .mockImplementation(() => Promise.resolve(thread));
 
@@ -62,10 +60,7 @@ describe("GetThreadUseCase", () => {
     });
     const useCaseResult = await getThreadUseCase.execute(useCasePayload);
 
-    expect(mockThreadRepository.verifyThreadExist).toBeCalledWith(
-      useCasePayload
-    );
-    expect(mockThreadRepository.getDetailThread).toBeCalledWith(useCasePayload);
+    expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload);
     expect(mockCommentRepository.getCommentByThreadId).toBeCalledWith(
       useCasePayload
     );

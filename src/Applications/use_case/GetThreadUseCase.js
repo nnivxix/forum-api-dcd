@@ -4,8 +4,7 @@ class GetThreadUseCase {
     this._commentRepository = commentRepository;
   }
   async execute(useCasePayload) {
-    await this._threadRepository.verifyThreadExist(useCasePayload);
-    const thread = await this._threadRepository.getDetailThread(useCasePayload);
+    const thread = await this._threadRepository.getThreadById(useCasePayload);
     thread.comments = await this._commentRepository.getCommentByThreadId(
       useCasePayload
     );
