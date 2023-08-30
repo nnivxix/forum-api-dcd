@@ -19,11 +19,13 @@ describe("GetThreadUseCase", () => {
         id: "comment-123",
         username: "test1",
         content: "content",
+        is_delete: false,
       },
       {
         id: "comment-124",
         username: "test2",
-        content: "content",
+        content: "**komentar telah dihapus**",
+        is_delete: true,
       },
     ];
     const expectedResult = {
@@ -36,11 +38,13 @@ describe("GetThreadUseCase", () => {
           id: "comment-123",
           content: "content",
           username: "test1",
+          is_delete: false,
         },
         {
           id: "comment-124",
-          content: "content",
+          content: "**komentar telah dihapus**",
           username: "test2",
+          is_delete: true,
         },
       ],
     };
