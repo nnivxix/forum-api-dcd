@@ -11,11 +11,11 @@ describe("AddCommentUseCase", () => {
       content: "Example Content",
     };
 
-    const expectedAddedComment = new AddedComment({
+    const expectedAddedComment = {
       id: "comment-123",
-      content: useCasePayload.content,
+      content: "Example Content",
       owner: "user-123",
-    });
+    };
 
     const credentialId = "user-123";
     const threadId = "thread-123";
@@ -25,9 +25,13 @@ describe("AddCommentUseCase", () => {
     const mockThreadRepository = new ThreadRepository();
 
     // mock needed function
-    mockCommentRepository.addComment = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(expectedAddedComment));
+    mockCommentRepository.addComment = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        id: "comment-123",
+        content: "Example Content",
+        owner: "user-123",
+      })
+    );
     mockThreadRepository.getThreadById = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
