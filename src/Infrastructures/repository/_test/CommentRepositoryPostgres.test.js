@@ -10,6 +10,7 @@ const pool = require("../../database/postgres/pool");
 const ThreadRepositoryPostgres = require("../ThreadRepositoryPostgres");
 const UserRepositoryPostgres = require("../UserRepositoryPostgres");
 const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
+const ForbiddenError = require("../../../Commons/exceptions/ForbiddenError");
 
 describe("CommentRepositoryPostgres", () => {
   afterEach(async () => {
@@ -179,6 +180,73 @@ describe("CommentRepositoryPostgres", () => {
       );
 
       expect(comments.length).toEqual(2);
+    });
+  });
+
+  describe("delete comment function", () => {
+    it("should throw Forbidden error when different owner", async () => {
+      const payload = {
+        userId: "user-123",
+        threadId: "thread-123",
+        commentId: "comment-123",
+      };
+      await UsersTableTestHelper.addUser({ id: payload.userId });
+      await ThreadsTableTestHelper.addThread({
+        id: payload.threadId,
+        owner: payload.userId,
+      });
+
+      await CommentsTableTestHelper.addComment({
+        id: payload.commentId,
+        thread: payload.threadId,
+        owner: payload.userId,
+      });
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(
+        pool,
+        {},
+        {}
+      );
+      await expect(
+        commentRepositoryPostgres.deleteComment(
+          payload.commentId,
+          "user-0",
+          payload.threadId
+        )
+      ).rejects.toThrowError(ForbiddenError);
+    });
+    it("should return object correctly", async () => {
+      const payload = {
+        userId: "user-123",
+        threadId: "thread-123",
+        commentId: "comment-123",
+      };
+      await UsersTableTestHelper.addUser({ id: payload.userId });
+      await ThreadsTableTestHelper.addThread({
+        id: payload.threadId,
+        owner: payload.userId,
+      });
+
+      await CommentsTableTestHelper.addComment({
+        id: payload.commentId,
+        thread: payload.threadId,
+        owner: payload.userId,
+      });
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(
+        pool,
+        {},
+        {}
+      );
+
+      await commentRepositoryPostgres.deleteComment(
+        payload.commentId,
+        payload.userId,
+        payload.threadId
+      );
+      const result = await CommentsTableTestHelper.findCommentDeletedById(
+        payload.commentId
+      );
+
+      expect(result).toHaveLength(1);
     });
   });
 });

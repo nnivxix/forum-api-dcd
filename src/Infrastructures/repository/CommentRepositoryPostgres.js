@@ -1,4 +1,5 @@
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
+const ForbiddenError = require("../../Commons/exceptions/ForbiddenError");
 const CommentRepository = require("../../Domains/comments/CommentRepository");
 const AddedComment = require("../../Domains/comments/entities/AddedComment");
 
@@ -46,7 +47,7 @@ class CommentRepositoryPostgres extends CommentRepository {
   }
   async getCommentByThreadId(threadId) {
     const query = {
-      text: `SELECT comments.id, comments.content, users.username
+      text: `SELECT comments.id, comments.is_delete, comments.content, users.username
             FROM comments
             LEFT JOIN users ON comments.owner = users.id
             WHERE comments.thread_id = $1 `,
@@ -54,6 +55,17 @@ class CommentRepositoryPostgres extends CommentRepository {
     };
     const { rows } = await this._pool.query(query);
     return rows;
+  }
+
+  async deleteComment(id, owner, thread) {
+    const query = {
+      text: 'UPDATE comments SET is_delete=true WHERE "owner"=$2 AND id=$1  AND thread_id=$3 RETURNING id, content, owner',
+      values: [id, owner, thread],
+    };
+    const result = await this._pool.query(query);
+    if (result.rows == 0) {
+      throw new ForbiddenError("tidak bisa menghapus comment dari user lain");
+    }
   }
 }
 module.exports = CommentRepositoryPostgres;

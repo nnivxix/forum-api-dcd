@@ -131,11 +131,13 @@ describe("/threads endpoint", () => {
           id: "comment-123",
           username: "jhondoe",
           content: "sebuah comment",
+          is_delete: false,
         },
         {
           id: "comment-321",
           username: "dicoding",
           content: "sebuah comment",
+          is_delete: false,
         },
       ];
       const expectedData = {
