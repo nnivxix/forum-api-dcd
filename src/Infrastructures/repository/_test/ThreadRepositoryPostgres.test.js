@@ -71,19 +71,17 @@ describe("ThreadRepositoryPostgres", () => {
 
       // Action
       await userRepositoryPostgres.addUser(registerUser);
-      const addedThread = await threadRepoPostgres.addThread(
+      const addThread = await threadRepoPostgres.addThread(
         newThread,
         "user-123"
       );
 
       // Assert
-      expect(addedThread).toStrictEqual(
-        new AddedThread({
-          id: "thread-123",
-          title: newThread.title,
-          owner: "user-123",
-        })
-      );
+      expect(addThread).toStrictEqual({
+        id: "thread-123",
+        title: newThread.title,
+        owner: "user-123",
+      });
     });
   });
   describe("getThreadById function", () => {
