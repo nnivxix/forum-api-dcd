@@ -8,9 +8,7 @@ class GetThreadUseCase {
     thread.comments = await this._commentRepository.getCommentByThreadId(
       useCasePayload
     );
-
     thread.comments = this._checkIsDeletedComments(thread.comments);
-
     return thread;
   }
   _checkIsDeletedComments(comment) {
@@ -22,7 +20,7 @@ class GetThreadUseCase {
           ? "**komentar telah dihapus**"
           : object.content,
         username: object.username,
-        is_delete: object.is_delete,
+        created_at: object.created_at,
       };
       result.push(data);
     });

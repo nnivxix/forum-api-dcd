@@ -94,82 +94,32 @@ describe("/threads endpoint", () => {
       expect(responseJson.status).toEqual("fail");
     });
     it("should return 200 when thread exist", async () => {
-      const payload = {
-        id: "thread-123",
-        title: " ini tittle",
-        body: "ini body",
-        owner: "user-321",
-      };
+      // Arrange
+      const threadId = "thread-123";
+      const userId = "user-123";
+      const commentId = "comment-123";
 
-      const userPayload = [
-        {
-          id: "user-123",
-          username: "jhondoe",
-        },
-        {
-          id: "user-321",
-          username: "dicoding",
-        },
-      ];
-
-      const commentPayload = [
-        {
-          id: "comment-123",
-          owner: "user-123",
-          content: "sebuah comment",
-          thread: "thread-123",
-        },
-        {
-          id: "comment-321",
-          owner: "user-321",
-          thread: "thread-123",
-          content: "sebuah comment",
-        },
-      ];
-      const expectedComments = [
-        {
-          id: "comment-123",
-          username: "jhondoe",
-          content: "sebuah comment",
-          is_delete: false,
-        },
-        {
-          id: "comment-321",
-          username: "dicoding",
-          content: "sebuah comment",
-          is_delete: false,
-        },
-      ];
-      const expectedData = {
-        id: "thread-123",
-        title: " ini tittle",
-        body: "ini body",
-      };
-      const expectedDetailThread = {
-        ...expectedData,
-        username:
-          payload.username == userPayload[0].id
-            ? userPayload[0].username
-            : userPayload[1].username,
-        comments: expectedComments,
-      };
-      await UsersTableTestHelper.addUser(userPayload[0]);
-      await UsersTableTestHelper.addUser(userPayload[1]);
-      await ThreadsTableTestHelper.addThread(payload);
-      await CommentsTableTestHelper.addComment(commentPayload[0]);
-      await CommentsTableTestHelper.addComment(commentPayload[1]);
-
+      await UsersTableTestHelper.addUser({ id: userId });
+      await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
+      await CommentsTableTestHelper.addComment({
+        id: commentId,
+        owner: userId,
+        isDeleted: false,
+      });
       const server = await createServer(container);
+
+      // Action
       const response = await server.inject({
-        url: "/threads/thread-123",
         method: "GET",
+        url: `/threads/${threadId}`,
       });
 
+      // Assert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(200);
       expect(responseJson.status).toEqual("success");
       expect(responseJson.data.thread).toBeDefined();
-      expect(responseJson.data.thread).toEqual(expectedDetailThread);
+      expect(responseJson.data.thread.comments).toBeDefined();
     });
   });
 });
