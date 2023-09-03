@@ -138,7 +138,7 @@ describe("/comments endpoint", () => {
       const userId = "user-12";
       const commentId = "comment-123";
       const accessToken = await ServerTestHelper.getAccessToken();
-      await UsersTableTestHelper.addUser({ id: userId, username: "mario" });
+      await UsersTableTestHelper.addUser({ id: userId, username: "hanasa" });
       await ThreadsTableTestHelper.addThread({ id: threadId, owner: userId });
       const comment = await CommentsTableTestHelper.addComment({
         id: commentId,
