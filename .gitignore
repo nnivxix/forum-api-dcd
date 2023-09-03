@@ -6,3 +6,5 @@ pnpm-lock.yaml
 config/database/test.json
 coverage
 .env
+
+*.zip
