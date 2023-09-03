@@ -20,7 +20,7 @@ class GetThreadUseCase {
           ? "**komentar telah dihapus**"
           : object.content,
         username: object.username,
-        created_at: object.created_at,
+        date: object.created_at,
       };
       result.push(data);
     });
