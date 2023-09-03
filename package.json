@@ -12,8 +12,11 @@
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "dicoding",
+    "back-end"
+  ],
+  "author": "hanasa",
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^20.1.5",
