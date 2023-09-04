@@ -13,7 +13,8 @@ const ThreadsTableTestHelper = {
       values: [id, owner, title, body],
     };
 
-    await pool.query(query);
+    const result = await pool.query(query);
+    return { ...result.rows[0] };
   },
 
   async getThreadById(id) {
@@ -24,7 +25,7 @@ const ThreadsTableTestHelper = {
 
     const { rows } = await pool.query(query);
 
-    return rows;
+    return rows[0];
   },
 
   async cleanTable() {

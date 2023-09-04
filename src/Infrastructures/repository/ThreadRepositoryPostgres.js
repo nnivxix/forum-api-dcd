@@ -3,23 +3,22 @@ const AddedThread = require("../../Domains/threads/entities/AddedThread");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 
 class ThreadRepositoryPostgres extends ThreadRepository {
-  constructor(pool, idGen) {
+  constructor(pool, id) {
     super();
 
     this._pool = pool;
-    this._idGen = idGen;
+    this._id = id;
   }
 
   async addThread(thread, owner) {
-    const id = `thread-${this._idGen()}`;
+    const id = `thread-${this._id()}`;
     const { title, body } = thread;
-    const created_at = new Date();
 
     const query = {
       text: `INSERT INTO threads VALUES (
-        $1, $2, $3, $4, $5
-      ) RETURNING id, title, owner`,
-      values: [id, owner, title, body, created_at],
+        $1, $2, $3, $4
+      ) RETURNING id, title, body, owner`,
+      values: [id, owner, title, body],
     };
     const result = await this._pool.query(query);
 
