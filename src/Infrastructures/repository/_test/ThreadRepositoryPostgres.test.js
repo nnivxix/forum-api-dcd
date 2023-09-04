@@ -3,8 +3,7 @@ const ThreadsTableTestHelper = require("../../../../tests/ThreadsTableTestHelper
 
 const pool = require("../../database/postgres/pool");
 const RegisterUser = require("../../../Domains/users/entities/RegisterUser");
-const NewThread = require("../../../Domains/threads/entities/AddThread");
-const AddedThread = require("../../../Domains/threads/entities/AddedThread");
+const AddThread = require("../../../Domains/threads/entities/AddThread");
 const ThreadRepositoryPostgres = require("../ThreadRepositoryPostgres");
 const UserRepositoryPostgres = require("../UserRepositoryPostgres");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
@@ -28,7 +27,7 @@ describe("ThreadRepositoryPostgres", () => {
         fullname: "Hanasa",
       });
 
-      const newThread = new NewThread({
+      const addThread = new AddThread({
         title: "thread title",
         body: "thread body",
       });
@@ -42,7 +41,7 @@ describe("ThreadRepositoryPostgres", () => {
 
       // Action
       await userRepositoryPostgres.addUser(registerUser);
-      const thread = await threadRepoPostgres.addThread(newThread, "user-123");
+      const thread = await threadRepoPostgres.addThread(addThread, "user-123");
 
       // Assert
       expect(thread.id).toStrictEqual("thread-123");
