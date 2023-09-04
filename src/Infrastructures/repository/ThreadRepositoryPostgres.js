@@ -17,7 +17,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     const query = {
       text: `INSERT INTO threads VALUES (
         $1, $2, $3, $4
-      ) RETURNING id, title, body, owner`,
+      ) RETURNING id, title, owner`,
       values: [id, owner, title, body],
     };
     const result = await this._pool.query(query);
