@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-const NewThread = require("../../Domains/threads/entities/NewThread");
+const AddThread = require("../../Domains/threads/entities/AddThread");
 
 class AddThreadUseCase {
   constructor({ threadRepository }) {
@@ -7,7 +7,7 @@ class AddThreadUseCase {
   }
 
   async execute(payload, owner) {
-    const thread = new NewThread(payload);
+    const thread = new AddThread(payload);
 
     return this._threadRepository.addThread(thread, owner);
   }

@@ -4,8 +4,8 @@ describe("a AddedThread entities", () => {
   it("should throw error when payload did not contain needed property", () => {
     // Arrange
     const payload = {
-      title: "dicoding",
-      owner: "Dicoding Indonesia",
+      title: "title thread",
+      owner: "user-123",
     };
 
     // Action and Assert
@@ -18,8 +18,8 @@ describe("a AddedThread entities", () => {
     // Arrange
     const payload = {
       id: 123,
-      title: "dicoding",
-      owner: {},
+      title: "title thread",
+      owner: true,
     };
 
     // Action and Assert
@@ -31,17 +31,17 @@ describe("a AddedThread entities", () => {
   it("should create AddedThread object correctly", () => {
     // Arrange
     const payload = {
-      id: "user-123",
-      title: "dicoding",
+      id: "thread-123",
+      title: "title thread",
       owner: "user-123",
     };
 
     // Action
-    const addedThread = new AddedThread(payload);
+    const { id, title, owner } = new AddedThread(payload);
 
     // Assert
-    expect(addedThread.id).toStrictEqual(payload.id);
-    expect(addedThread.title).toStrictEqual(payload.title);
-    expect(addedThread.owner).toStrictEqual(payload.owner);
+    expect(id).toStrictEqual(payload.id);
+    expect(title).toStrictEqual(payload.title);
+    expect(owner).toStrictEqual(payload.owner);
   });
 });

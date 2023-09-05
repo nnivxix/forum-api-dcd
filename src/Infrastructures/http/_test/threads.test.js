@@ -45,6 +45,7 @@ describe("/threads endpoint", () => {
     it("should response 400 when bad payload", async () => {
       const payload = {
         title: "test",
+        body: true,
       };
       const accessToken = await ServerTestHelper.getAccessToken();
       const server = await createServer(container);
